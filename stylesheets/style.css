@@ -1,0 +1,15 @@
+.editor {
+  width: 250px;
+  height: 300px;
+  margin: auto;
+  margin-top: 50px;
+  border: dashed 1px #ccc;
+  position: relative; }
+  .editor .child {
+    width: 100px;
+    height: 100px;
+    background: blue;
+    margin: auto;
+    margin-top: 50px; }
+
+/*# sourceMappingURL=style.css.map */
