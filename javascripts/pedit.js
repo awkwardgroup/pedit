@@ -3,20 +3,16 @@
 var PEDIT = PEDIT || {};
 
 PEDIT = {
-  init: function(editorClass) {
+  init: function(editorID) {
 
     // Create global array for editors
     PEDIT.editors = PEDIT.editors || [];
     
-    // Add all editor elements in the document to a private array
-    var editors = document.getElementsByClassName(editorClass);
+    // Get the editor element by ID and add to a private variable
+    var editor = document.getElementById(editorID);
 
-    // Loop through the private editor array
-    for (var i = 0; i < editors.length; i++) {
-      
-      // Create an object for each editor element and add it to the editors array
-      PEDIT.editors.push(new PEDIT.Editor.init(editors[i]));
-    }
+    // Create an object for the editor element and add it to the editors array
+    PEDIT.editors.push(new PEDIT.Editor.init(editor));
   }
 }
 
