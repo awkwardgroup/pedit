@@ -53,8 +53,8 @@ PEDIT = {
 
       // Update child max size
       if ( editor.updateChildMaxSize ) {
-        editor.childMaxWidth = editor.width - editor.offset;
-        editor.childMaxHeight = editor.height - editor.offset;
+        editor.childMaxWidth = 100;
+        editor.childMaxHeight = 100;
       }
     }
 
@@ -94,14 +94,15 @@ PEDIT = {
         return child;
     }
 
-    /*editor.getSizeValue() {
-      if (editor.percent) {
-
+    editor.calculateSize = function(pixels, horizontal) {
+      if (horizontal) {
+        var size = pixels / (editor.width - editor.offset) * 100;
       }
       else {
-        return 
+        var size = pixels / (editor.height - editor.offset) * 100;
       }
-    }*/
+      return size;
+    }
   },
 
   Child:function(editor, element, id) {
@@ -114,10 +115,10 @@ PEDIT = {
     child.elementResize = null;
     child.elementRemove = null;
     child.editor = editor;
-    child.width = element.offsetWidth;
-    child.height = element.offsetHeight;
-    child.offsetX = element.offsetLeft;
-    child.offsetY = element.offsetTop;
+    child.width = editor.calculateSize(element.offsetWidth, true);
+    child.height = editor.calculateSize(element.offsetHeight, false);
+    child.offsetX = editor.calculateSize(element.offsetLeft, true);
+    child.offsetY = editor.calculateSize(element.offsetTop, false);
     child.locked = false;
 
     /******************
@@ -179,8 +180,8 @@ PEDIT = {
     ************/
     child.updateOffsetLimits = function() {
       // Update child offsets
-      child.offsetLimitX = editor.width - child.width - editor.offset
-      child.offsetLimitY = editor.height - child.height - editor.offset;
+      child.offsetLimitX = 100 - child.width;
+      child.offsetLimitY = 100 - child.height;
     }
 
     child.move = function() {
@@ -197,16 +198,18 @@ PEDIT = {
         PEDIT.mouseEndY = e.y;
         
         // Set child offset X
-        offsetX = child.offsetX + (PEDIT.mouseEndX - PEDIT.mouseStartX);
+        offsetX = child.offsetX + editor.calculateSize((PEDIT.mouseEndX - PEDIT.mouseStartX), true);
         offsetX = offsetX < 0 ? 0 : offsetX;
         offsetX = offsetX > child.offsetLimitX ? child.offsetLimitX : offsetX;
-        child.element.style.left = offsetX + 'px';
+        //offsetX = editor.calculateSize(offsetX, true);
+        child.element.style.left = offsetX + '%';
         
         // Set child offset Y
-        offsetY = child.offsetY + (PEDIT.mouseEndY - PEDIT.mouseStartY);
+        offsetY = child.offsetY + editor.calculateSize((PEDIT.mouseEndY - PEDIT.mouseStartY), false);
         offsetY = offsetY < 0 ? 0 : offsetY;
         offsetY = offsetY > child.offsetLimitY ? child.offsetLimitY : offsetY;
-        child.element.style.top = offsetY + 'px';
+        //offsetY = editor.calculateSize(offsetY, false);
+        child.element.style.top = offsetY + '%';
       }
 
       document.onmouseup = function(e) {
@@ -225,15 +228,24 @@ PEDIT = {
         PEDIT.mouseStartX = e.x;
         PEDIT.mouseStartY = e.y;
 
-        // Set pixel changes
-        var horizontalChange = PEDIT.mouseStartX - PEDIT.mouseEndX;
-        var verticalChange = PEDIT.mouseStartY - PEDIT.mouseEndY;
-        var overallChange = horizontalChange !== 0 ? horizontalChange : verticalChange;
-        overallChange += overallChange/2; // Needed when expanding in all dimensions
+        // Calculate element ratio
+        var ratio = child.height / child.width;
 
-        // Update element size
-        child.updateElementSize(child.width + overallChange, child.height + overallChange);
-        
+        // Calculate distance between points
+        var horizontalChange = PEDIT.mouseStartX - PEDIT.mouseEndX;
+        var dx = horizontalChange * horizontalChange;
+        var verticalChange = PEDIT.mouseStartY - PEDIT.mouseEndY;
+        var dy = verticalChange * verticalChange;
+        var distance = Math.sqrt(dx + dy) * 1.5;
+        distance = horizontalChange >= 0 && verticalChange >= 0 ? distance : -distance;
+
+        // Set new width and height
+        var width = child.width + editor.calculateSize((distance), true);
+        var height = ratio * width;
+
+        // Updated element position
+        child.updateElementSize(width, height);
+
         // Update mouse end position
         PEDIT.mouseEndX = e.x;
         PEDIT.mouseEndY = e.y;
@@ -257,15 +269,21 @@ PEDIT = {
         var heightChange = height - child.height;
 
         // Update child size
-        child.width = width;
-        child.height = height;
+        if (widthChange > 0) {
+          child.width = width > 99 ? 100 : width;
+          child.height = height > 99 ? 100 : height;
+        }
+        else {
+          child.width = width;
+          child.height = height;
+        }
 
         // Update offset limits after changing size
         child.updateOffsetLimits();
 
         // Set element size
-        child.element.style.width = child.width + 'px';
-        child.element.style.height = child.height + 'px';
+        child.element.style.width = child.width + '%';
+        child.element.style.height = child.height + '%';
 
         // Set element position
         var offsetX = child.offsetX - (widthChange / 2);
@@ -282,8 +300,8 @@ PEDIT = {
       else { offsetY = offsetY > child.offsetLimitY ? child.offsetLimitY : offsetY; }
 
       // Set element position
-      child.element.style.left = offsetX + 'px';
-      child.element.style.top = offsetY + 'px';
+      child.element.style.left = offsetX + '%';
+      child.element.style.top = offsetY + '%';
       
       // Update child offset variables
       child.offsetX = offsetX;

@@ -20,13 +20,15 @@
 	editor.remove = true;
 	editor.resize = true;
 	editor.percent = true;
-	editor.childMaxWidth = 150;
+	//editor.updateChildMaxSize = false;
+	editor.childMaxWidth = 80;
+	editor.childMaxHeight = 80;
 	editor.render();
 
 	function addChild() {
 		var element = document.createElement('div');
 		editor.element.appendChild(element);
-		var child = editor.addChild(element);
+		editor.render();
 	}
 	</script>
 </body>
