@@ -11,10 +11,23 @@
 </head>
 <body>
 	<div id="editor" class="editor">
-		<div class="child"></div>
+		<div></div>
 	</div>
+	<input type="button" value="Add Child" onclick="addChild();">
 	<script>
 	var editor = PEDIT.init('editor');
+	editor.offset = 2;
+	editor.remove = true;
+	editor.resize = true;
+	editor.percent = true;
+	editor.childMaxWidth = 150;
+	editor.render();
+
+	function addChild() {
+		var element = document.createElement('div');
+		editor.element.appendChild(element);
+		var child = editor.addChild(element);
+	}
 	</script>
 </body>
 </html>

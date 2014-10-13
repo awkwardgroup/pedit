@@ -5,11 +5,29 @@
   margin-top: 50px;
   border: dashed 1px #ccc;
   position: relative; }
-  .editor .child {
-    width: 100px;
-    height: 100px;
+  .editor > div {
+    width: 40%;
+    height: 30%;
     background: blue;
-    margin: auto;
-    margin-top: 50px; }
+    top: 50px;
+    left: 75px;
+    cursor: default;
+    position: absolute; }
+    .editor > div .resize, .editor > div .remove {
+      width: 20px;
+      height: 20px;
+      bottom: -10px;
+      position: absolute; }
+      .editor > div .resize.resize, .editor > div .remove.resize {
+        right: -10px;
+        background: green; }
+      .editor > div .resize.remove, .editor > div .remove.remove {
+        left: -10px;
+        background: red; }
+
+input {
+  display: block;
+  margin: auto;
+  margin-top: 20px; }
 
 /*# sourceMappingURL=style.css.map */
