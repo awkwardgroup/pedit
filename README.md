@@ -4,7 +4,7 @@ Edit multiple HTML elements within a specific area (editor). It's super easy to 
 
 Developed by the team behind www.printees.se.
 
-_Features_
+## Features
 - Resize element (ratio driven)
 - Move element
 - Remove element
@@ -19,16 +19,16 @@ IE7+, Chrome, Opera, Safari
 2. Configure editor options (optional)<br>
 `editor.offset = 2;`
 
-3. Render children
+3. Render child elements<br>
 `editor.render();`
 
-## Add children (elements) dynamically
+## Add elements dynamically
 1. Create a new element and add it to the editor element<br>
 `var element = document.createElement('div');`<br>
 `editor.element.appendChild(element);`
 
-2 Render children<br>
+2. Render child elements<br>
 `editor.render();`<br>
-or add child directly<br>
+_or add child directly_<br>
 `var child = editor.addChild(element)`
 
