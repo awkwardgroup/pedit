@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-	<script src="javascripts/pedit.js"></script>
+	<script src="javascripts/pedit.min.js"></script>
 </head>
 <body>
 	<div id="editor" class="editor">
@@ -20,13 +20,14 @@
 	editor.remove = true;
 	editor.resize = true;
 	editor.percent = true;
-	//editor.updateChildMaxSize = false;
+	editor.updateChildMaxSize = true;
 	editor.childMaxWidth = 80;
 	editor.childMaxHeight = 80;
 	editor.render();
 
 	function addChild() {
 		var element = document.createElement('div');
+		element.style.background = 'brown';
 		editor.element.appendChild(element);
 		editor.render();
 	}

@@ -56,7 +56,7 @@ PEDIT = {
         editor.childMaxWidth = 100;
         editor.childMaxHeight = 100;
       }
-    }
+    };
 
     /************
       FUNCTIONS
@@ -75,15 +75,15 @@ PEDIT = {
       }
 
       // Loop through children list
-      for (var i = 0; i < elementsClean.length; i++) {
+      for (i = 0; i < elementsClean.length; i++) {
         // Add child to the editor
         editor.addChild(elementsClean[i]);
       }
-    }
+    };
 
     editor.addChild = function(element) {
         // Create a child object
-        var child = new PEDIT.Child(editor, element, editor.childTrailID)
+        var child = new PEDIT.Child(editor, element, editor.childTrailID);
         // Add child object to editors children array
         editor.children[editor.childTrailID] = child;
         // Set element id as attribute
@@ -92,17 +92,15 @@ PEDIT = {
         editor.childTrailID++;
         // Return child object
         return child;
-    }
+    };
 
     editor.calculateSize = function(pixels, horizontal) {
-      if (horizontal) {
-        var size = pixels / (editor.width - editor.offset) * 100;
-      }
-      else {
-        var size = pixels / (editor.height - editor.offset) * 100;
+      var size = pixels / (editor.width - editor.offset) * 100;
+      if (!horizontal) {
+        size = pixels / (editor.height - editor.offset) * 100;
       }
       return size;
-    }
+    };
   },
 
   Child:function(editor, element, id) {
@@ -143,7 +141,7 @@ PEDIT = {
       child.updateOffsetLimits();
       // Move
       child.move();
-    }
+    };
 
     if (child.elementResize) {
       child.elementResize.onmousedown = function(e) {
@@ -151,7 +149,7 @@ PEDIT = {
         child.locked = true;
         // Resize
         child.resize();
-      }
+      };
     }
 
     if (child.elementRemove) {
@@ -163,7 +161,7 @@ PEDIT = {
         child.elementRemove.onmouseup = function(e) {
           // Remove
           child.remove();
-        }
+        };
 
         // Reset on mouseup 
         document.onmouseup = function(e) {
@@ -171,8 +169,8 @@ PEDIT = {
           child.elementRemove.onclick = null;
           // Unlock child
           child.locked = false;
-        }
-      }
+        };
+      };
     }
 
     /************
@@ -182,7 +180,7 @@ PEDIT = {
       // Update child offsets
       child.offsetLimitX = 100 - child.width;
       child.offsetLimitY = 100 - child.height;
-    }
+    };
 
     child.move = function() {
       // Set function variables
@@ -210,7 +208,7 @@ PEDIT = {
         offsetY = offsetY > child.offsetLimitY ? child.offsetLimitY : offsetY;
         //offsetY = editor.calculateSize(offsetY, false);
         child.element.style.top = offsetY + '%';
-      }
+      };
 
       document.onmouseup = function(e) {
         // Unbind event
@@ -218,8 +216,8 @@ PEDIT = {
         // Update child offset variables
         child.offsetX = offsetX;
         child.offsetY = offsetY;
-      }
-    }
+      };
+    };
 
     child.resize = function() {
 
@@ -249,15 +247,15 @@ PEDIT = {
         // Update mouse end position
         PEDIT.mouseEndX = e.x;
         PEDIT.mouseEndY = e.y;
-      }
+      };
 
       document.onmouseup = function(e) {
         // Unbind document event
         document.onmousemove = null;
         // Unlock child
         child.locked = false;
-      }
-    }
+      };
+    };
 
     child.updateElementSize = function(width, height) {
         // If image is to big or to small, stop!
@@ -289,14 +287,14 @@ PEDIT = {
         var offsetX = child.offsetX - (widthChange / 2);
         var offsetY = child.offsetY - (heightChange / 2);
         child.updateElementPosition(offsetX, offsetY);
-    }
+    };
 
     child.updateElementPosition = function(offsetX, offsetY) {
       // Check if image is out of bound
-      if ( offsetX < 0 ) { offsetX = 0 }
+      if ( offsetX < 0 ) { offsetX = 0; }
       else { offsetX = offsetX > child.offsetLimitX ? child.offsetLimitX : offsetX; }
 
-      if ( offsetY < 0 ) { offsetY = 0 }
+      if ( offsetY < 0 ) { offsetY = 0; }
       else { offsetY = offsetY > child.offsetLimitY ? child.offsetLimitY : offsetY; }
 
       // Set element position
@@ -306,7 +304,7 @@ PEDIT = {
       // Update child offset variables
       child.offsetX = offsetX;
       child.offsetY = offsetY;
-    }
+    };
 
     child.remove = function() {
       // Remove element from DOM
@@ -314,7 +312,7 @@ PEDIT = {
       // Remove object from editor array
       child.editor.children.splice(child.id, 1);
       // Delete reference to the object
-      delete child;
-    }
+      //delete child; JSHint warning for deleting variable
+    };
   }
-}
+};
