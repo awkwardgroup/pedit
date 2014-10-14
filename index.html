@@ -17,11 +17,11 @@
 	<div id="debug"></div> <!-- For dev purpose -->
 	<script>
 	var moveDone = function(child) {
-		console.log('Move done:', child);
+		if (window.console) console.log('Move done:', child);
 	}
 
 	var resizeDone = function(child) {
-		console.log('Resize done:', child);
+		if (window.console) console.log('Resize done:', child);
 	}
 
 	function addChild() {
