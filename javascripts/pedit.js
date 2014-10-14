@@ -34,18 +34,21 @@ PEDIT = {
     editor.childMinWidth = 10;
     editor.childMinHeight = 10;
     editor.childTrailID = 1;
+    editor.moveDoneFunction = null;
+    editor.resizeDoneFunction = null;
     editor.children = [];
 
     /*********
       EVENTS
     *********/
-    editor.element.onmousedown = function(e) { 
+    PEDIT.events.mouseDown(editor.element, function(e) { 
       // Update object properties on mouse down
       // Set mouse position
-      PEDIT.mouseStartX = e.x;
-      PEDIT.mouseStartY = e.y;
-      PEDIT.mouseEndX = e.x;
-      PEDIT.mouseEndY = e.y;
+      var xy = PEDIT.tools.getPageXY(e);
+      PEDIT.mouseStartX = xy[0];
+      PEDIT.mouseStartY = xy[1];
+      PEDIT.mouseEndX = xy[0];
+      PEDIT.mouseEndY = xy[1];
 
       // Update editor size
       editor.width = editor.element.offsetWidth;
@@ -56,7 +59,7 @@ PEDIT = {
         editor.childMaxWidth = 100;
         editor.childMaxHeight = 100;
       }
-    };
+    });
 
     /************
       FUNCTIONS
@@ -136,41 +139,44 @@ PEDIT = {
     /*********
       EVENTS
     *********/
-    child.element.onmousedown = function(e) {
+    PEDIT.events.mouseDown(child.element, function(e) {
       // Update offset limits
       child.updateOffsetLimits();
       // Move
       child.move();
-    };
+    });
 
     if (child.elementResize) {
-      child.elementResize.onmousedown = function(e) {
+      PEDIT.events.mouseDown(child.elementResize, function(e) {
         // Lock object
         child.locked = true;
         // Resize
         child.resize();
-      };
+      });
     }
 
+    // Redo this, don't think everything is necessary, acn't slide of on touch
     if (child.elementRemove) {
-      child.elementRemove.onmousedown = function(e) {
+      PEDIT.events.mouseDown(child.elementRemove, function(e) {
+        // Stop default event behaviour
+        e.preventDefault();
+        e.stopPropagation();
+
         // Lock object
         child.locked = true;
 
         // Remove on mouse up over element
-        child.elementRemove.onmouseup = function(e) {
+        PEDIT.events.mouseUp(child.elementRemove, function(e) {
           // Remove
           child.remove();
-        };
+        });
 
-        // Reset on mouseup 
-        document.onmouseup = function(e) {
-          // Unbind element event
-          child.elementRemove.onclick = null;
+        // Reset on document mouseup 
+        PEDIT.events.mouseUp(document, function(e) {
           // Unlock child
           child.locked = false;
-        };
-      };
+        });
+      });
     }
 
     /************
@@ -186,45 +192,62 @@ PEDIT = {
       // Set function variables
       var offsetX = child.offsetX;
       var offsetY = child.offsetY;
-      
+
       // If child is locked, stop!
       if ( child.locked) { return; }
       
-      document.onmousemove = function(e) {
+      var moveElement = function(e) {
+        // Stop default event behaviour
+        e.preventDefault();
+        e.stopPropagation();
+
         // Update mouse end position
-        PEDIT.mouseEndX = e.x;
-        PEDIT.mouseEndY = e.y;
-        
+        var xy = PEDIT.tools.getPageXY(e);
+        PEDIT.mouseEndX = xy[0];
+        PEDIT.mouseEndY = xy[1];
+
         // Set child offset X
         offsetX = child.offsetX + editor.calculateSize((PEDIT.mouseEndX - PEDIT.mouseStartX), true);
         offsetX = offsetX < 0 ? 0 : offsetX;
         offsetX = offsetX > child.offsetLimitX ? child.offsetLimitX : offsetX;
-        //offsetX = editor.calculateSize(offsetX, true);
         child.element.style.left = offsetX + '%';
-        
+
         // Set child offset Y
         offsetY = child.offsetY + editor.calculateSize((PEDIT.mouseEndY - PEDIT.mouseStartY), false);
         offsetY = offsetY < 0 ? 0 : offsetY;
         offsetY = offsetY > child.offsetLimitY ? child.offsetLimitY : offsetY;
-        //offsetY = editor.calculateSize(offsetY, false);
         child.element.style.top = offsetY + '%';
       };
+      // Connect moveElement function to document event
+      PEDIT.events.mouseMove(document, moveElement);
 
-      document.onmouseup = function(e) {
-        // Unbind event
-        document.onmousemove = null;
+      var moveElementDone = function(e) {
+        // Unbind move events
+        PEDIT.events.mouseMove(document, moveElement, true);
+        PEDIT.events.mouseUp(document, moveElementDone, true);
         // Update child offset variables
         child.offsetX = offsetX;
         child.offsetY = offsetY;
+        // Run dynamic end function
+        if (typeof editor.moveDoneFunction === 'function') {
+          editor.moveDoneFunction(child);
+        }
       };
+      // Connect moveElementDone function to document event
+      PEDIT.events.mouseUp(document, moveElementDone);
     };
 
     child.resize = function() {
 
-      document.onmousemove = function(e) {
+      var resizeElement = function(e) {
+        // Stop default event behaviour
+        e.preventDefault();
+        //e.stopPropagation();
+
         // Update mouse start position
-        PEDIT.mouseStartX = e.x;
-        PEDIT.mouseStartY = e.y;
+        var xy = PEDIT.tools.getPageXY(e);
+        PEDIT.mouseStartX = xy[0];
+        PEDIT.mouseStartY = xy[1];
 
         // Calculate element ratio
         var ratio = child.height / child.width;
@@ -245,16 +268,25 @@ PEDIT = {
         child.updateElementSize(width, height);
 
         // Update mouse end position
-        PEDIT.mouseEndX = e.x;
-        PEDIT.mouseEndY = e.y;
+        PEDIT.mouseEndX = xy[0];
+        PEDIT.mouseEndY = xy[1];
       };
+      // Connect resizeElement function to document event
+      PEDIT.events.mouseMove(document, resizeElement);
 
-      document.onmouseup = function(e) {
-        // Unbind document event
-        document.onmousemove = null;
+      var resizeElementDone = function(e) {
+        // Unbind move events
+        PEDIT.events.mouseMove(document, resizeElement, true);
+        PEDIT.events.mouseUp(document, resizeElementDone, true);
         // Unlock child
         child.locked = false;
+        // Run dynamic end function
+        if (typeof editor.resizeDoneFunction === 'function') {
+          editor.resizeDoneFunction(child);
+        }
       };
+      // Connect resizeElementDone function to document event
+      PEDIT.events.mouseUp(document, resizeElementDone);
     };
 
     child.updateElementSize = function(width, height) {
@@ -314,5 +346,81 @@ PEDIT = {
       // Delete reference to the object
       //delete child; JSHint warning for deleting variable
     };
+  }
+};
+
+PEDIT.events = {
+  mouseDown: function(element, _function, remove) {
+    this.bindEvent('down', element, _function, remove);
+  },
+  mouseUp: function(element, _function, remove) {
+    this.bindEvent('up', element, _function, remove);
+  },
+  mouseMove: function(element, _function, remove) {
+    this.bindEvent('move', element, _function, remove);
+  },
+  bindEvent: function(type, element, _function, remove) {
+    // Touch
+    if (PEDIT.tools.isTouchDevice()) {
+      if (type === 'down') { 
+        if (remove) { element.removeEventListener("touchstart", _function, false); }
+        else { element.addEventListener("touchstart", _function, false); }
+      }
+      else if (type === 'up') {
+        if (remove) { element.removeEventListener("touchend", _function, false); }
+        else { element.addEventListener("touchend", _function, false); }
+      }
+      else if (type === 'move') {
+        if (remove) { element.removeEventListener("touchmove", _function, false); }
+        else { element.addEventListener("touchmove", _function, false); }
+      }
+    }
+    // Mouse
+    else {
+      if (type === 'down') {
+        if (remove) { element.onmousedown = null; }
+        else { element.onmousedown = _function; }
+      }
+      else if (type === 'up') {
+        if (remove) { element.onmouseup = null; }
+        else { element.onmouseup = _function; }
+      }
+      else if (type === 'move') {
+        if (remove) { element.onmousemove = null; }
+        else { element.onmousemove = _function; }
+      }
+    }
+  }
+};
+
+PEDIT.tools = {
+  isTouchDevice: function() {  
+    try {
+      document.createEvent("TouchEvent");  
+      return true;  
+    }
+    catch (e) {
+      return false;  
+    }
+  },
+  getPageXY: function(e) {
+    if (typeof e.touches !== 'undefined') {
+      return [e.touches[0].pageX, e.touches[0].pageY];
+    }
+    else {
+      return [e.pageX, e.pageY];
+    }
+  },
+  addTouchClass: function(className) {
+    var hasClass = (' ' + document.body.className + ' ').indexOf(' ' + className + ' ') > -1;
+    if (!hasClass && this.isTouchDevice()) {
+      document.body.className += document.body.className !== '' ? ' ' + className : className;
+    }
+  },
+  // For dev purpose
+  console: function(text, clean) {
+    var html = document.getElementById('debug').innerHTML;
+    html = clean ? text + '<br>' + html : text;
+    document.getElementById('debug').innerHTML = html;
   }
 };

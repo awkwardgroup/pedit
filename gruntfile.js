@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       },
       sass: {
         files: ['stylesheets/style.scss'],
-        tasks: ['compile-sass'],
+        tasks: ['sass'],
       },
       css: {
         files: ['stylesheets/style.css'],
@@ -51,6 +51,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Task definition
-  grunt.registerTask('compile-sass', ['sass', 'cssmin']);
   grunt.registerTask('default', ['watch']);
 };
