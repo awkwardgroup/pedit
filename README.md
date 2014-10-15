@@ -4,6 +4,8 @@ Edit multiple HTML elements (children) within a specific area (editor). It's sup
 
 Developed by the team behind www.printees.se.
 
+[View live demo](http://awkwardcloud.com/pedit/)
+
 ## Features
 - Resize element (ratio driven)
 - Move element
@@ -20,9 +22,9 @@ Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 `<link rel="stylesheet" type="text/css" href="stylesheets/style.css">`
 
 3. Markup the HTML. Each child element of #editor will be editable after render.<br>
-`<div id="editor">
-	<div></div>
-</div>`
+`<div id="editor">`<br>
+`	<div></div>`<br>
+`</div>`
 
 4. initialize the editor by ID<br>
 `var editor = PEDIT.init('editor');`
@@ -43,13 +45,18 @@ Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 _or add child directly_<br>
 `var child = editor.addChild(element)`
 
-With a reference to the child object you can edit it via JavaScript, for example:<br>
+
+## Edit child element via JavaScript
+With a reference to the child object you can edit it via JavaScript:<br>
 `child.updateElementPosition(x, y)`<br>
-_or_
+_or_<br>
 `child.updateElementSize(widthPercent, heightPercent)`
 
+You can also access the child properties like offsets, size, etc.
+
 ## Options
-These are the default options that can be set for each editor.<br>
+These are the properties that can be set for each editor.
+
 editor.width<br>
 editor.height<br>
 editor.offset<br>
