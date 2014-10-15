@@ -1,11 +1,11 @@
-.editor {
+#editor {
   width: 250px;
   height: 300px;
   margin: auto;
   margin-top: 50px;
   border: dashed 1px #ccc;
   position: relative; }
-  .editor *, .editor {
+  #editor *, #editor {
     outline: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
@@ -17,7 +17,7 @@
     -o-user-select: none;
     user-select: none;
     cursor: default; }
-  .editor > div {
+  #editor > div {
     width: 40%;
     height: 30%;
     background: blue;
@@ -25,35 +25,26 @@
     left: 75px;
     cursor: default;
     position: absolute; }
-    .editor > div .resize, .editor > div .remove {
+    #editor > div .resize, #editor > div .remove {
       width: 20px;
       height: 20px;
       bottom: -10px;
       position: absolute;
       border-radius: 10px; }
-      .editor > div .resize.resize, .editor > div .remove.resize {
+      #editor > div .resize.resize, #editor > div .remove.resize {
         right: -10px;
         background: green; }
-      .editor > div .resize.remove, .editor > div .remove.remove {
+      #editor > div .resize.remove, #editor > div .remove.remove {
         left: -10px;
         background: red; }
-      .touch .editor > div .resize, .touch .editor > div .remove {
+      .touch #editor > div .resize, .touch #editor > div .remove {
         width: 30px;
         height: 30px;
         bottom: -15px;
         border-radius: 15px; }
-        .touch .editor > div .resize.resize, .touch .editor > div .remove.resize {
+        .touch #editor > div .resize.resize, .touch #editor > div .remove.resize {
           right: -15px; }
-        .touch .editor > div .resize.remove, .touch .editor > div .remove.remove {
+        .touch #editor > div .resize.remove, .touch #editor > div .remove.remove {
           left: -15px; }
-
-input {
-  display: block;
-  margin: auto;
-  margin-top: 20px; }
-
-#debug {
-  width: 250px;
-  margin: auto; }
 
 /*# sourceMappingURL=style.css.map */

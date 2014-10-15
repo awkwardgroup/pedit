@@ -3,14 +3,14 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title></title>
-	<meta name="description" content="">
+	<title>PEdit</title>
+	<meta name="description" content="Edit multiple HTML elements within a specific area.">
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 	<script src="javascripts/pedit.js"></script>
 </head>
 <body>
-	<div id="editor" class="editor">
+	<div id="editor">
 		<div></div>
 	</div>
 	<input type="button" value="Add Child" onclick="addChild();">
@@ -48,5 +48,16 @@
 	// Add class if touch device
 	PEDIT.tools.addTouchClass('touch');
 	</script>
+	<style>
+	input {
+		display: block;
+		margin: auto;
+		margin-top: 20px;
+	}
+	#debug {
+		width: 250px;
+		margin: auto;
+	}
+	</style>
 </body>
 </html>
