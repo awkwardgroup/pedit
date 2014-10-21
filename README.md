@@ -58,7 +58,12 @@ These are the functions that can be used for each editor.
 
 render()<br>
 createChild(element)<br>
-getChild(ID)
+**calculateSize(pixels, horizontal)**<br>
+Converts pixels to editor related percent value<br>
+**getChild(ID)**<br>
+Returns a child object based on ID.<br>
+**clean()**<br>
+Cleans the editor by deleting all children and reseting the trailing ID for children.
 
 ## Options
 These are the properties that can be set for each editor.

@@ -85,7 +85,7 @@ PEDIT = {
           elementsClean.push(elements[i]);
         }
       }
-
+      
       // Loop through children list
       for (i = 0; i < elementsClean.length; i++) {
         // Add child to the editor
@@ -113,9 +113,20 @@ PEDIT = {
       }
       return size;
     };
-
+    
     editor.getChild = function(id) {
       return editor.children[id];
+    };
+
+    editor.clean = function() {
+      // Reset trail ID
+      editor.childTrailID = 1;
+      // Remove all child objects
+      for (var child in editor.children) {
+        if (editor.children.hasOwnProperty(child)) {
+          editor.children[child].remove();
+        }
+      }
     };
   },
 
