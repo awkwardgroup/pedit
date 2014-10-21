@@ -42,7 +42,7 @@ PEDIT = {
     editor.resizeDoneFunction = null;
     editor.removeDoneFunction = null;
     editor.childRenderedFunction = null;
-    editor.children = [];
+    editor.children = {};
     
     /*********
       EVENTS
@@ -96,7 +96,7 @@ PEDIT = {
     editor.createChild = function(element) {
       // Create a child object
       var child = new PEDIT.Child(editor, element, editor.childTrailID);
-      // Add child object to editors children array
+      // Add child object to editors children object
       editor.children[editor.childTrailID] = child;
       // Set element id as attribute
       element.setAttribute('data-child-id', editor.childTrailID);
@@ -112,6 +112,10 @@ PEDIT = {
         size = pixels / (editor.height - editor.offset) * 100;
       }
       return size;
+    };
+
+    editor.getChild = function(id) {
+      return editor.children[id];
     };
   },
 
@@ -161,7 +165,6 @@ PEDIT = {
       // Update child element dimensions
       child.element.style.width = child.width + '%';
       child.element.style.height = child.height + '%';
-      console.log(child.width, child.height);
 
       // Render resize element
       if (child.editor.resize) {
@@ -215,6 +218,10 @@ PEDIT = {
           PEDIT.events.mouseUp(child.elementRemove, function() {
             // Remove
             child.remove();
+            // Run dynamic end function (put here only to run on GUI interaction)
+            if (typeof editor.removeDoneFunction === 'function') {
+              editor.removeDoneFunction(child);
+            }
           });
 
           // Reset on document mouseup 
@@ -404,15 +411,8 @@ PEDIT = {
     child.remove = function() {
       // Remove element from DOM
       child.editor.element.removeChild(child.element);
-      // Remove object from editor array
-      child.editor.children.splice(child.id, 1);
-      // Run dynamic end function
-      if (typeof editor.removeDoneFunction === 'function') {
-        editor.removeDoneFunction(child);
-      }
-      // Delete reference to the object
-      //delete child; JSHint warning for deleting variable
-
+      // Remove object from editors children object
+      delete child.editor.children[child.id];
     };
   }
 };

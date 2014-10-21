@@ -53,6 +53,13 @@ _or_<br>
 
 You can also access the child properties like offsets, size, etc.
 
+## Functions
+These are the functions that can be used for each editor.
+
+render()<br>
+createChild(element)<br>
+getChild(ID)
+
 ## Options
 These are the properties that can be set for each editor.
 
@@ -70,7 +77,7 @@ editor.childMinHeight<br>
 editor.childTrailID<br>
 editor.moveDoneFunction<br>
 editor.resizeDoneFunction<br>
-editor.removeDoneFunction<br>
+editor.removeDoneFunction (Only runs on GUI interaction)<br>
 editor.childRenderedFunction
 
 ## Misc
