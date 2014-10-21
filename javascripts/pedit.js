@@ -40,6 +40,7 @@ PEDIT = {
     editor.childTrailID = 1;
     editor.moveDoneFunction = null;
     editor.resizeDoneFunction = null;
+    editor.removeDoneFunction = null;
     editor.children = [];
 
     /*********
@@ -366,8 +367,13 @@ PEDIT = {
       child.editor.element.removeChild(child.element);
       // Remove object from editor array
       child.editor.children.splice(child.id, 1);
+      // Run dynamic end function
+      if (typeof editor.removeDoneFunction === 'function') {
+        editor.removeDoneFunction(child);
+      }
       // Delete reference to the object
       //delete child; JSHint warning for deleting variable
+
     };
   }
 };

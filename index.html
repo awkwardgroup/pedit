@@ -25,6 +25,10 @@
 		if (window.console) console.log('Resize done:', child);
 	}
 
+	var removeDone = function(child) {
+		if (window.console) console.log('Remove done:', child);
+	}
+
 	function addChild() {
 		var element = document.createElement('div');
 		element.style.background = 'brown';
@@ -44,6 +48,7 @@
 	editor.addTouchClass = true;
 	editor.moveDoneFunction = moveDone;
 	editor.resizeDoneFunction = resizeDone;
+	editor.removeDoneFunction = removeDone;
 	editor.render();
 	
 	// Add class if touch device
