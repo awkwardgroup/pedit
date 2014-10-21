@@ -40,11 +40,10 @@ Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 `var element = document.createElement('div');`<br>
 `editor.element.appendChild(element);`
 
-2. Render child elements<br>
+2. Render editor to create new child objects<br>
 `editor.render();`<br>
-_or add child directly_<br>
-`var child = editor.addChild(element)`
-
+_or create each child directly_<br>
+`var child = editor.createChild(element)`
 
 ## Edit child element via JavaScript
 With a reference to the child object you can edit it via JavaScript:<br>
@@ -71,6 +70,8 @@ editor.childMinHeight<br>
 editor.childTrailID<br>
 editor.moveDoneFunction<br>
 editor.resizeDoneFunction<br>
+editor.removeDoneFunction<br>
+editor.childRenderedFunction
 
 ## Misc
 Please report issues with the script here on GitHub.

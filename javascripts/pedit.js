@@ -41,8 +41,9 @@ PEDIT = {
     editor.moveDoneFunction = null;
     editor.resizeDoneFunction = null;
     editor.removeDoneFunction = null;
+    editor.childRenderedFunction = null;
     editor.children = [];
-
+    
     /*********
       EVENTS
     *********/
@@ -88,32 +89,11 @@ PEDIT = {
       // Loop through children list
       for (i = 0; i < elementsClean.length; i++) {
         // Add child to the editor
-        editor.addChild(elementsClean[i]);
+        editor.createChild(elementsClean[i]);
       }
     };
 
-    editor.addChild = function(element) {
-        images = element.getElementsByTagName('img');
-
-        if (typeof images[0] !== 'undefined') {
-          // Check every 10 milisecond
-          var interval = setInterval(function() {
-            // Check if image 1 is loaded
-            if (images[0].complete) {
-              // Clear interval
-              clearInterval(interval);
-              // Create and return child object
-              return initiateChild(element);
-            }
-          }, 10);
-        }
-        else {
-           // Create and return child object
-          return initiateChild(element);
-        }
-    };
-
-    function initiateChild(element) {
+    editor.createChild = function(element) {
       // Create a child object
       var child = new PEDIT.Child(editor, element, editor.childTrailID);
       // Add child object to editors children array
@@ -124,7 +104,7 @@ PEDIT = {
       editor.childTrailID++;
       // Return child object
       return child;
-    }
+    };
 
     editor.calculateSize = function(pixels, horizontal) {
       var size = pixels / (editor.width - editor.offset) * 100;
@@ -145,76 +125,110 @@ PEDIT = {
     child.elementResize = null;
     child.elementRemove = null;
     child.editor = editor;
-    child.width = editor.calculateSize(element.offsetWidth, true);
-    child.height = editor.calculateSize(element.offsetHeight, false);
-    child.offsetX = editor.calculateSize(element.offsetLeft, true);
-    child.offsetY = editor.calculateSize(element.offsetTop, false);
     child.locked = false;
 
     /******************
       RENDER ELEMENTS
     ******************/
-    if (child.editor.resize) {
-      child.elementResize = document.createElement('div');
-      child.elementResize.className = 'resize';
-      child.element.appendChild(child.elementResize);
-    }
-    if (child.editor.remove) {
-      child.elementRemove = document.createElement('div');
-      child.elementRemove.className = 'remove';
-      child.element.appendChild(child.elementRemove);
-    }
+    // Get all images in child
+    images = element.getElementsByTagName('img');
 
-    // Update child dimensions
-    child.element.style.width = child.width + '%';
-    child.element.style.height = child.height + '%';
-    console.log(child.width, child.height);
-    /*********
-      EVENTS
-    *********/
-    PEDIT.events.mouseDown(child.element, function() {
-      // Update offset limits
-      child.updateOffsetLimits();
-      // Move
-      child.move();
-    });
-
-    if (child.elementResize) {
-      PEDIT.events.mouseDown(child.elementResize, function() {
-        // Lock object
-        child.locked = true;
-        // Resize
-        child.resize();
-      });
-    }
-
-    // Redo this, don't think everything is necessary, acn't slide of on touch
-    if (child.elementRemove) {
-      PEDIT.events.mouseDown(child.elementRemove, function(e) {
-        // IE8 fix
-        e = e || window.event;
-
-        // Stop default event behaviour for touch devices
-        if (PEDIT.isTouchDevice) {
-          e.preventDefault();
-          //e.stopPropagation();
+    // If an image exists
+    if (typeof images[0] !== 'undefined') {
+      // Set interval to 10 miliseconds
+      var interval = setInterval(function() {
+        // Check if the image is loaded
+        if (images[0].complete) {
+          // Render child
+          renderChild();
+          // Clear interval
+          clearInterval(interval);
         }
+      }, 10);
+    }
+    else {
+       // Render child directly
+      renderChild();
+    }
 
-        // Lock object
-        child.locked = true;
+    function renderChild() {
+      // Set dynamic object properties
+      child.width = editor.calculateSize(element.offsetWidth, true);
+      child.height = editor.calculateSize(element.offsetHeight, false);
+      child.offsetX = editor.calculateSize(element.offsetLeft, true);
+      child.offsetY = editor.calculateSize(element.offsetTop, false);
 
-        // Remove on mouse up over element
-        PEDIT.events.mouseUp(child.elementRemove, function() {
-          // Remove
-          child.remove();
-        });
+      // Update child element dimensions
+      child.element.style.width = child.width + '%';
+      child.element.style.height = child.height + '%';
+      console.log(child.width, child.height);
 
-        // Reset on document mouseup 
-        PEDIT.events.mouseUp(document, function() {
-          // Unlock child
-          child.locked = false;
-        });
+      // Render resize element
+      if (child.editor.resize) {
+        child.elementResize = document.createElement('div');
+        child.elementResize.className = 'resize';
+        child.element.appendChild(child.elementResize);
+      }
+
+      // Render remove element
+      if (child.editor.remove) {
+        child.elementRemove = document.createElement('div');
+        child.elementRemove.className = 'remove';
+        child.element.appendChild(child.elementRemove);
+      }
+      
+      /*********
+        EVENTS
+      *********/
+      PEDIT.events.mouseDown(child.element, function() {
+        // Update offset limits
+        child.updateOffsetLimits();
+        // Move
+        child.move();
       });
+      
+      if (child.elementResize) {
+        PEDIT.events.mouseDown(child.elementResize, function() {
+          // Lock object
+          child.locked = true;
+          // Resize
+          child.resize();
+        });
+      }
+      
+      // TODO: Redo this, don't think everything is necessary, can't slide of on touch
+      if (child.elementRemove) {
+        PEDIT.events.mouseDown(child.elementRemove, function(e) {
+          // IE8 fix
+          e = e || window.event;
+
+          // Stop default event behaviour for touch devices
+          if (PEDIT.isTouchDevice) {
+            e.preventDefault();
+            //e.stopPropagation();
+          }
+
+          // Lock object
+          child.locked = true;
+
+          // Remove on mouse up over element
+          PEDIT.events.mouseUp(child.elementRemove, function() {
+            // Remove
+            child.remove();
+          });
+
+          // Reset on document mouseup 
+          PEDIT.events.mouseUp(document, function() {
+            // Unlock child
+            child.locked = false;
+          });
+        });
+      }
+      
+      // Run dynamic end function
+      if (typeof editor.childRenderedFunction === 'function') {
+        editor.childRenderedFunction(child);
+      }
     }
 
     /************
