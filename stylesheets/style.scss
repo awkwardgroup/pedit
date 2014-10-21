@@ -22,13 +22,22 @@
 	}
 
 	> div {
-		width: 40%;
-		height: 30%;
-		background: blue;
-		top: 50px;
-		left: 75px;
+		width: 50%;
+		top: 10%;
+		left: 25%;
 		cursor: default;
 		position: absolute;
+
+		img {
+			width: 100%;
+			pointer-events: none;
+			float: left;
+		}
+
+		&.noimage {
+			height: 30%;
+			background: brown;
+		}
 
 		.resize, .remove {
 			width: 20px;
@@ -40,11 +49,13 @@
 			&.resize {
 				right: -10px;
 				background: green;
+				cursor: nwse-resize;
 			}
 
 			&.remove {
 				left: -10px;
 				background: red;
+				cursor: pointer;
 			}
 
 			.touch & {

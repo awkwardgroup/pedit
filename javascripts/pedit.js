@@ -93,17 +93,38 @@ PEDIT = {
     };
 
     editor.addChild = function(element) {
-        // Create a child object
-        var child = new PEDIT.Child(editor, element, editor.childTrailID);
-        // Add child object to editors children array
-        editor.children[editor.childTrailID] = child;
-        // Set element id as attribute
-        element.setAttribute('data-child-id', editor.childTrailID);
-        // Increase trail ID
-        editor.childTrailID++;
-        // Return child object
-        return child;
+        images = element.getElementsByTagName('img');
+
+        if (typeof images[0] !== 'undefined') {
+          // Check every 10 milisecond
+          var interval = setInterval(function() {
+            // Check if image 1 is loaded
+            if (images[0].complete) {
+              // Clear interval
+              clearInterval(interval);
+              // Create and return child object
+              return initiateChild(element);
+            }
+          }, 10);
+        }
+        else {
+           // Create and return child object
+          return initiateChild(element);
+        }
     };
+
+    function initiateChild(element) {
+      // Create a child object
+      var child = new PEDIT.Child(editor, element, editor.childTrailID);
+      // Add child object to editors children array
+      editor.children[editor.childTrailID] = child;
+      // Set element id as attribute
+      element.setAttribute('data-child-id', editor.childTrailID);
+      // Increase trail ID
+      editor.childTrailID++;
+      // Return child object
+      return child;
+    }
 
     editor.calculateSize = function(pixels, horizontal) {
       var size = pixels / (editor.width - editor.offset) * 100;
@@ -144,6 +165,10 @@ PEDIT = {
       child.element.appendChild(child.elementRemove);
     }
 
+    // Update child dimensions
+    child.element.style.width = child.width + '%';
+    child.element.style.height = child.height + '%';
+    console.log(child.width, child.height);
     /*********
       EVENTS
     *********/
