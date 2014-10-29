@@ -8,6 +8,7 @@ PEDIT = {
   mouseEndX: 0,
   mouseEndY: 0,
   isTouchDevice: false,
+  editors: [],
 
   init:function(editorID) {
     // Get the editor element by ID
@@ -16,8 +17,10 @@ PEDIT = {
     // Check if touch device
     this.isTouchDevice = PEDIT.tools.isTouchDevice();
 
-    // Create and return an editor object
-    return new PEDIT.Editor(element);
+    // Create an editor, add it to an array and then return it
+    var editor = new PEDIT.Editor(element);
+    this.editors.push(editor);
+    return editor;
   },
 
   Editor:function(element) {
@@ -33,8 +36,8 @@ PEDIT = {
     editor.resize = true;
     editor.percent = true;
     editor.updateChildMaxSize = true;
-    editor.childMaxWidth = 0;
-    editor.childMaxHeight = 0;
+    editor.childMaxWidth = 100;
+    editor.childMaxHeight = 100;
     editor.childMinWidth = 10;
     editor.childMinHeight = 10;
     editor.childTrailID = 1;
@@ -259,6 +262,9 @@ PEDIT = {
     };
 
     child.move = function() {
+      // Add pedit in motion class
+      PEDIT.tools.toggleClass(document.body, 'peditInMotion');
+
       // Set function variables
       var offsetX = child.offsetX;
       var offsetY = child.offsetY;
@@ -298,6 +304,8 @@ PEDIT = {
       PEDIT.events.mouseMove(document, moveElement);
 
       var moveElementDone = function() {
+        // Remove pedit in motion class
+        PEDIT.tools.toggleClass(document.body, 'peditInMotion', true);
         // Unbind move events
         PEDIT.events.mouseMove(document, moveElement, true);
         PEDIT.events.mouseUp(document, moveElementDone, true);
@@ -314,7 +322,9 @@ PEDIT = {
     };
 
     child.resize = function() {
-
+      // Add pedit in motion class
+      PEDIT.tools.toggleClass(document.body, 'peditInMotion');
+      
       var resizeElement = function(e) {
         // IE8 fix
         e = e || window.event;
@@ -356,6 +366,8 @@ PEDIT = {
       PEDIT.events.mouseMove(document, resizeElement);
 
       var resizeElementDone = function() {
+        // Remove pedit in motion class
+        PEDIT.tools.toggleClass(document.body, 'peditInMotion', true);
         // Unbind move events
         PEDIT.events.mouseMove(document, resizeElement, true);
         PEDIT.events.mouseUp(document, resizeElementDone, true);
@@ -486,20 +498,33 @@ PEDIT.tools = {
     if (typeof e.touches !== 'undefined') {
       return [e.touches[0].pageX, e.touches[0].pageY];
     }
+    else if (typeof e.clientX !== 'undefined') {
+      return [e.clientX, e.clientY];
+    }
     else {
       return [e.x, e.y];
     }
   },
   addTouchClass: function(className) {
-    var hasClass = (' ' + document.body.className + ' ').indexOf(' ' + className + ' ') > -1;
-    if (!hasClass && PEDIT.isTouchDevice) {
-      document.body.className += document.body.className !== '' ? ' ' + className : className;
+    if (PEDIT.isTouchDevice) {
+      this.toggleClass(document.body, className, false);
     }
+  },
+  toggleClass: function(element, className, remove) {
+    if ( typeof remove === 'undefined' ) { remove = false; }
+    var hasClass = (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+    
+    // Add class
+    if (!hasClass && !remove) {
+      element.className += element.className !== '' ? ' ' + className : className;
+    }
+    // Remove class
+    else if (hasClass && remove) { element.className = element.className.replace(className, ''); }
   },
   // For dev purpose
   console: function(text, clean) {
     var html = document.getElementById('debug').innerHTML;
     html = clean ? text + '<br>' + html : text;
     document.getElementById('debug').innerHTML = html;
-  }
+  },
 };
