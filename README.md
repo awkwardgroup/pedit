@@ -23,52 +23,52 @@ Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 
 2. Include the pedit javascipt.<br>
 
-    <script src="javascripts/pedit.min.js"></script>
+```<script src="javascripts/pedit.min.js"></script>```
 
 3. Include the stylesheet. You can edit the Sass file and compile it, or just edit the CSS. You will probably need to edit the style to fit your needs :)<br>
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+```<link rel="stylesheet" type="text/css" href="stylesheets/style.css">```
 
 4. Markup the HTML. Each child element of #editor will be editable after render.<br>
 
-    <div id="editor">
-      <div></div>
-    </div>
+```<div id="editor">
+    <div></div>
+</div>```
 
 5. initialize the editor by ID<br>
 
-  var editor = PEDIT.init('editor');
+```var editor = PEDIT.init('editor');```
 
 6. Configure editor options (optional)<br>
 
-  editor.offset = 2;
+```editor.offset = 2;```
 
 7. Render child elements<br>
   
-  editor.render();
+```editor.render();```
 
 ## Add child elements dynamically
 1. Create a new DOM element and add it to the editor element<br>
     
-    var element = document.createElement('div');
-    editor.element.appendChild(element);
+```var element = document.createElement('div');
+editor.element.appendChild(element);```
 
 2. Render editor to create new child objects<br>
   
-    editor.render();
+```editor.render();```
 
 _or create each child directly_
 
-    var child = editor.createChild(element);
+```var child = editor.createChild(element);```
 
 ## Edit child element via JavaScript
 With a reference to the child object you can edit it via JavaScript:<br>
 
-    child.updateElementPosition(x, y);
+```child.updateElementPosition(x, y);```
 
 _or_
 
-  child.updateElementSize(widthPercent, heightPercent)
+```child.updateElementSize(widthPercent, heightPercent);```
 
 You can also access the child properties like offsets, size, etc.
 
