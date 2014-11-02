@@ -17,7 +17,7 @@ Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 ## Setup
 1. Download from GIT or install via NPM.
 
-    npm install pedit
+    npm install pedit 
 
 [https://github.com/awkwardgroup/pedit/archive/master.zip](https://github.com/awkwardgroup/pedit/archive/master.zip)
 
