@@ -118,11 +118,11 @@ Set minimum width of children (in percent, only numeric value).<br>
 The ID that is used for children, incremented when a child is rendered.<br>
 **editor.moveDoneFunction**<br>
 Reference a function that runs when the movement of a child object is done. Takes the child object as a parameter.<br>
-editor.resizeDoneFunction<br>
+**editor.resizeDoneFunction**<br>
 Reference a function that runs when the resizing of a child object is done. Takes the child object as a parameter.<br>
-editor.removeDoneFunction (Only runs on GUI interaction)<br>
+**editor.removeDoneFunction** (Only runs on GUI interaction)<br>
 Reference a function that runs when the deleting of a child object is done. Takes the child object as a parameter.<br>
-editor.childRenderedFunction<br>
+**editor.childRenderedFunction**<br>
 Reference a function that runs when the redering of each child object is done. Takes the child object as a parameter.<br>
 **editor.children**<br>
 An object that holds all the children of the editor.
