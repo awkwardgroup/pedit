@@ -34,8 +34,6 @@ PEDIT = {
     editor.offset = 0;
     editor.remove = true;
     editor.resize = true;
-    editor.percent = true;
-    editor.updateChildMaxSize = true;
     editor.childMaxWidth = 100;
     editor.childMaxHeight = 100;
     editor.childMinWidth = 10;
@@ -65,12 +63,6 @@ PEDIT = {
       // Update editor size
       editor.width = editor.element.offsetWidth;
       editor.height = editor.element.offsetHeight;
-
-      // Update child max size
-      if ( editor.updateChildMaxSize ) {
-        editor.childMaxWidth = 100;
-        editor.childMaxHeight = 100;
-      }
     });
 
     /************

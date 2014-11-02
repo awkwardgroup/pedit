@@ -1,6 +1,6 @@
 {
-  "name": "PEdit",
-  "version": "0.1.4",
+  "name": "pedit",
+  "version": "0.1.5",
   "description": "JavaScript enabled drag and resize of HTML elements.",
   "main": "index.js",
   "dependencies": {},
