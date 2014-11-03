@@ -2,7 +2,7 @@ PEdit
 =====
 Edit multiple HTML elements (children) within a specific area (editor). Edit elements via the GUI or the object API. No libraries needed, just good old Vanilla JavaScript.
 
-Developed by the team behind [www.printees.se](www.printees.se).
+Developed by the team behind [www.printees.se](http://www.printees.se).
 
 [View live demo](http://awkwardcloud.com/pedit/)
 
@@ -15,46 +15,84 @@ Developed by the team behind [www.printees.se](www.printees.se).
 Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 
 ## Setup
-(1) Download from GIT or install via NPM.<br>
-`npm install pedit`
+(1) Download from GIT or install via NPM.
+
+```bash
+npm install pedit
+```
 
 [https://github.com/awkwardgroup/pedit/archive/master.zip](https://github.com/awkwardgroup/pedit/archive/master.zip)
 
-(2) Include the pedit javascipt.<br>
-`<script src="javascripts/pedit.min.js"></script>`
+(2) Include the pedit javascipt.
 
-(3) Include the stylesheet. You can edit the Sass file and compile it, or just edit the CSS. You will probably need to edit the style to fit your needs :)<br>
-`<link rel="stylesheet" type="text/css" href="stylesheets/style.css">`
+```html
+<script src="javascripts/pedit.min.js"></script>
+```
 
-(4) Markup the HTML. Each child element of #editor will be editable after render.<br>
-`<div id="editor">`<br>
-`    <div></div>`<br>
-`</div>`
+(3) Include the stylesheet. You can edit the Sass file and compile it, or just edit the CSS. You will probably need to edit the style to fit your needs :)
 
-(5) initialize the editor by ID<br>
-`var editor = PEDIT.init('editor');`
+```html
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+```
 
-(6) Configure editor options (optional)<br>
-`editor.offset = 2;`
+(4) Markup the HTML. Each child element of #editor will be editable after render.
 
-(7) Render child elements<br>
-`editor.render();`
+```html
+<div id="editor">
+  <div></div>
+</div>
+````
+
+(5) initialize the editor by ID
+
+```js
+var editor = PEDIT.init('editor');
+```
+
+(6) Configure editor options (optional)
+
+```js
+editor.offset = 2;
+```
+
+(7) Render child elements
+
+```js
+editor.render();
+```
 
 ## Add child elements dynamically
-(1) Create a new DOM element and add it to the editor element<br> 
-`var element = document.createElement('div');`<br>
-`editor.element.appendChild(element);`
+(1) Create a new DOM element and add it to the editor element
+
+```js
+var element = document.createElement('div');
+editor.element.appendChild(element);
+```
 
 (2) Render editor to create new child objects<br>
-`editor.render();`<br>
-_or create each child directly_<br>
-`var child = editor.createChild(element);`
+
+```js
+editor.render();
+```
+
+_or create each child directly_
+
+```js
+var child = editor.createChild(element);
+```
 
 ## Edit child element via JavaScript
-With a reference to the child object you can edit it via JavaScript:<br>
-`child.updateElementPosition(x, y);`<br>
-_or_<br>
-`child.updateElementSize(widthPercent, heightPercent);`
+With a reference to the child object you can edit it via JavaScript:
+
+```js
+child.updateElementPosition(x, y);
+```
+
+_or_
+
+```js
+child.updateElementSize(widthPercent, heightPercent);
+```
 
 You can also access the child properties like offsets, size, etc.
 
