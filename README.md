@@ -15,13 +15,13 @@ Developed by the team behind [www.printees.se](http://www.printees.se).
 Desktop and touch devices, IE8+, Chrome, Opera, Safari, Firefox
 
 ## Setup
-(1) Download from GIT or install via NPM.
+(1) Install via NPM or download from GIT.
 
 ```bash
 npm install pedit
 ```
 
-[https://github.com/awkwardgroup/pedit/archive/master.zip](https://github.com/awkwardgroup/pedit/archive/master.zip)
+Download: [https://github.com/awkwardgroup/pedit/archive/master.zip](https://github.com/awkwardgroup/pedit/archive/master.zip)
 
 (2) Include the pedit javascipt.
 
@@ -61,44 +61,23 @@ editor.offset = 2;
 editor.render();
 ```
 
-## Add child elements dynamically
-(1) Create a new DOM element and add it to the editor element
+## Editor
+With a reference to the editor you can access and update properties/options and run functions related to it. For example you can add a child dynamically:
 
 ```js
-var element = document.createElement('div');
-editor.element.appendChild(element);
+1. var element = document.createElement('div');
+2. editor.element.appendChild(element);
+3. editor.render();
 ```
 
-(2) Render editor to create new child objects<br>
+You can also add a child directly without using `editor.render();` to get a reference to it:
 
 ```js
-editor.render();
+3. var child = editor.createChild(element);
 ```
 
-_or create each child directly_
 
-```js
-var child = editor.createChild(element);
-```
-
-## Edit child element via JavaScript
-With a reference to the child object you can edit it via JavaScript:
-
-```js
-child.updateElementPosition(x, y);
-```
-
-_or_
-
-```js
-child.updateElementSize(widthPercent, heightPercent);
-```
-
-You can also access the child properties like offsets, size, etc.
-
-## Functions
-These are the functions that can be used for an editor object.
-
+### Editor Functions
 **render()**<br>
 Render all children in the editor.<br>
 **createChild(element)**<br>
@@ -110,28 +89,7 @@ Returns a child object based on ID.<br>
 **clean()**<br>
 Cleans the editor by deleting all children and reseting the trailing ID for children.
 
-These are the functions that can be used for a child object.
-
-**updateElementPosition(offsetX, offsetY)**<br>
-Updates the position of the element within the editor.<br>
-**updateElementSize**<br>
-Updates the size of the element within the editor.<br>
-
-
-These are functions that can be used from PEDIT.tools.
-
-**isTouchDevice()**<br>
-Detect if it's a touch device, returns true or false;<br>
-**getPageXY(event)**<br>
-Get the current X and Y based on the event, returns an array.<br>
-**addTouchClass(className)**<br>
-Adds a class to the body element if it's a touch device.<br>
-**toggleClass(element, className, remove)**<br>
-Add or remove a class to an element.
-
-## Options
-These are the properties that can accessed for an editor object.
-
+### Editor Properties
 **editor.element**<br>
 The editors HTML DOM element.<br>
 **editor.width**<br>
@@ -165,9 +123,27 @@ Reference a function that runs when the redering of each child object is done. T
 **editor.children**<br>
 An object that holds all the children of the editor.
 
-These are the properties that can accessed for a child object.
+## Child
+With a reference to the child object you can edit it via functions or access necessary properties. For example you can update the position of the child:
 
-**child.id**<br>
+```js
+child.updateElementPosition(20, 20);
+```
+
+Or you can access the childs size properties:
+
+```js
+var width = child.width();
+var height = child.height();
+```
+
+### Child Functions
+**updateElementPosition(offsetX, offsetY)**<br>
+Updates the position of the element within the editor.<br>
+**updateElementSize**<br>
+Updates the size of the element within the editor.<br>
+
+### Child Properties
 The ID that represents the child object.<br>
 **child.element**<br>
 The childs HTML DOM element.<br>
@@ -187,6 +163,18 @@ The childs height in percent (related to the editor height).<br>
 The childs X offset in percent (related to the editor width).<br>
 **child.offsetY**<br>
 The childs Y offset in percent (related to the editor height).
+
+## Other functions
+There are some other functions that can be accessed within the namespace.
+
+**PEDIT.tools.isTouchDevice()**<br>
+Detect if it's a touch device, returns true or false;<br>
+**PEDIT.tools.getPageXY(event)**<br>
+Get the current X and Y based on the event, returns an array.<br>
+**PEDIT.tools.addTouchClass(className)**<br>
+Adds a class to the body element if it's a touch device.<br>
+**PEDIT.tools.toggleClass(element, className, remove)**<br>
+Add or remove a class to an element.
 
 ## Misc
 Please report issues with the script here on GitHub.
