@@ -2,7 +2,7 @@
   "name": "pedit",
   "version": "0.1.7",
   "description": "JavaScript enabled drag and resize of HTML elements.",
-  "main": "pedit.js",
+  "main": "javascripts/pedit.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.5",

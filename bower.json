@@ -1,0 +1,17 @@
+{
+  "name": "pedit",
+  "version": "0.1.7",
+  "homepage": "https://github.com/awkwardgroup/pedit",
+  "main": "javascripts/pedit.js",
+  "authors": [
+    "Joakim Strandell <joakim@awkwardgroup.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
